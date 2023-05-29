@@ -10,15 +10,19 @@ class HiperSpider(scrapy.Spider):
     ]
     api_url = "https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search/{category}?O=OrderByTopSaleDESC&_from={startPage}&_to={endPage}&ft&sc={sucursal}"
     
+    def __init__(self, sucursal=""):
+        self.sucursal = sucursal
+
     def start_requests(self):
+
         for category in self.start_urls:
-            url = self.api_url.format(category=category, startPage=0, endPage=20, sucursal=1)
+            url = self.api_url.format(category=category, startPage=0, endPage=20, sucursal=self.sucursal)
             meta = {
                 "listingPage": url,
                 "category": category,
                 "startPage": 0,
                 "endPage": 20,
-                "sucursal": 1
+                "sucursal": self.sucursal
             }
             yield scrapy.Request(url=url, callback=self.parse, meta=meta)
     
@@ -43,10 +47,12 @@ class HiperSpider(scrapy.Spider):
             item['category'] = product['categories']
             item['sku'] = product['productId']
             item['description'] = product['description']
+            
             yield item
 
         nextPage = endPage + 20
         url = self.api_url.format(category=category, startPage=endPage, endPage=nextPage, sucursal=sucursal)
+        
         meta = {
             "listingPage": listingPage,
             "category": category,

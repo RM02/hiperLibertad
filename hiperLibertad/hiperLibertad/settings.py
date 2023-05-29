@@ -6,6 +6,8 @@
 #     https://docs.scrapy.org/en/latest/topics/settings.html
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
+import os
+from decouple import config
 
 BOT_NAME = "hiperLibertad"
 
@@ -18,6 +20,17 @@ NEWSPIDER_MODULE = "hiperLibertad.spiders"
 
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+
+# File Storage
+
+FILENAME = "{filename}.{ext}".format(filename=config('FILENAME'), ext='csv')
+DIR = config('FILEPATH')
+
+FILEPATH = os.path.join(DIR, FILENAME)
+
+FEEDS = {
+    FILEPATH: { 'format': 'csv',}
+} 
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32

@@ -1,2 +1,6 @@
 ## Enviroment
 env
+*.env
+
+##python
+*.pyc
