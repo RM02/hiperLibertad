@@ -1,8 +1,13 @@
 import scrapy
 import json
+from hiperLibertad.items import HiperlibertadItem
 class HiperSpider(scrapy.Spider):
     name = "hiper"
-    start_urls = ["tecnologia"]
+    start_urls = [
+        "tecnologia",
+        "electrodomesticos",
+        "hogar"
+    ]
     api_url = "https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search/{category}?O=OrderByTopSaleDESC&_from={startPage}&_to={endPage}&ft&sc={sucursal}"
     
     def start_requests(self):
@@ -30,7 +35,15 @@ class HiperSpider(scrapy.Spider):
         sucursal = response.meta.get("sucursal")
                 
         for product in data_json:
-            print(product['link'])
+            item = HiperlibertadItem()
+            item['url'] = product['link']
+            item['name'] = product['productName']
+            item['price'] = product['items'][0]['sellers'][0]['commertialOffer']['Price']
+            item['stock'] = product['items'][0]['sellers'][0]['commertialOffer']['IsAvailable']
+            item['category'] = product['categories']
+            item['sku'] = product['productId']
+            item['description'] = product['description']
+            yield item
 
         nextPage = endPage + 20
         url = self.api_url.format(category=category, startPage=endPage, endPage=nextPage, sucursal=sucursal)
@@ -41,6 +54,6 @@ class HiperSpider(scrapy.Spider):
             "endPage": nextPage,
             "sucursal": sucursal
         }
-        
+
         yield scrapy.Request(url=url, callback=self.parse, meta=meta)
             
