@@ -7,7 +7,6 @@
 #     https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
 #     https://docs.scrapy.org/en/latest/topics/spider-middleware.html
 import os
-from decouple import config
 
 BOT_NAME = "hiperLibertad"
 
@@ -23,8 +22,8 @@ ROBOTSTXT_OBEY = True
 
 # File Storage
 
-FILENAME = "{filename}.{ext}".format(filename=config('FILENAME'), ext='csv')
-DIR = config('FILEPATH')
+FILENAME = "{filename}.{ext}".format(filename=os.environ.get('FILENAME'), ext='csv')
+DIR = os.environ.get('FILEPATH')
 
 FILEPATH = "hiperdata.csv" or os.path.join(DIR, FILENAME)
 
@@ -37,6 +36,14 @@ SUCURSALES = {
     "2": 'CORDOBA - Hipermercado Rivera',
     "3": 'CORDOBA - Hipermercado Jacinto Rios',
     "4": 'CORDOBA - Hipermercado Ruta 9',
+    "5": 'MENDOZA - Hipermercado Godoy Cruz',
+    "6": 'MENDOZA - Tienda Digital Mza Capital',
+    "7": 'TUCUMAN - Hipermercado Tucuman 1',
+    "8": 'TUCUMAN - Hipermercado Tucuman 2',
+    "9": 'MISIONES - Hipermercado Posadas',
+    "10": 'CHACO - Hipermercado Chaco',
+    "11": 'SANTA FE - Hipermercado Rosario',
+    "12": 'SANTA FE - Hipermercado Rafaela'    
 }
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -72,10 +79,12 @@ SUCURSALES = {
 
 ## PROXY
 
-PROXY_USER = config("PROXY_USER")
-PROXY_PASSWORD = config("PROXY_PASSWORD")
-PROXY_ENDPOINT = config("PROXY_ENDPOINT")
-PROXY_PORT = config("PROXY_PORT")
+PROXY_USER = os.environ.get("PROXY_USER")
+PROXY_PASSWORD = os.environ.get("PROXY_PASSWORD")
+PROXY_ENDPOINT = os.environ.get("PROXY_ENDPOINT")
+PROXY_PORT = os.environ.get("PROXY_PORT")
+
+## You should uncomment this two lines to use proxy
 
 DOWNLOADER_MIDDLEWARES = { 
     #'hiperLibertad.middlewares.MyProxyMiddleware': 350, 
