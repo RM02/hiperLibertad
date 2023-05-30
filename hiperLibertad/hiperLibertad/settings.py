@@ -26,12 +26,18 @@ ROBOTSTXT_OBEY = True
 FILENAME = "{filename}.{ext}".format(filename=config('FILENAME'), ext='csv')
 DIR = config('FILEPATH')
 
-FILEPATH = os.path.join(DIR, FILENAME)
+FILEPATH = "hiperdata.csv" or os.path.join(DIR, FILENAME)
 
 FEEDS = {
     FILEPATH: { 'format': 'csv',}
 } 
 
+SUCURSALES = {
+    "1": 'CORDOBA - Hipermercado Lugones',
+    "2": 'CORDOBA - Hipermercado Rivera',
+    "3": 'CORDOBA - Hipermercado Jacinto Rios',
+    "4": 'CORDOBA - Hipermercado Ruta 9',
+}
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
 
@@ -63,9 +69,18 @@ FEEDS = {
 
 # Enable or disable downloader middlewares
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html
-#DOWNLOADER_MIDDLEWARES = {
-#    "hiperLibertad.middlewares.HiperlibertadDownloaderMiddleware": 543,
-#}
+
+## PROXY
+
+PROXY_USER = config("PROXY_USER")
+PROXY_PASSWORD = config("PROXY_PASSWORD")
+PROXY_ENDPOINT = config("PROXY_ENDPOINT")
+PROXY_PORT = config("PROXY_PORT")
+
+DOWNLOADER_MIDDLEWARES = { 
+    #'hiperLibertad.middlewares.MyProxyMiddleware': 350, 
+    #'scrapy.downloadermiddlewares.httpproxy.HttpProxyMiddleware': 400, 
+}
 
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html

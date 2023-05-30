@@ -1,12 +1,30 @@
 import scrapy
 import json
 from hiperLibertad.items import HiperlibertadItem
+from hiperLibertad.settings import SUCURSALES
 class HiperSpider(scrapy.Spider):
     name = "hiper"
     start_urls = [
         "tecnologia",
         "electrodomesticos",
-        "hogar"
+        "hogar",
+        "bebidas",
+        "almacen",
+        "lacteos",
+        "quesos-y-fiambres",
+        "carnes",
+        "frutas-y-verduras",
+        "taeq",
+        "congelados",
+        "pastas-frescas-y-tapas",
+        "limpieza",
+        "perfumeria",
+        "bebes-y-ninos",
+        "vehiculos",
+        "mascotas",
+        "aire-libre-y-jardin",
+        "libreria",
+        "deportes"
     ]
     api_url = "https://www.hiperlibertad.com.ar/api/catalog_system/pub/products/search/{category}?O=OrderByTopSaleDESC&_from={startPage}&_to={endPage}&ft&sc={sucursal}"
     
@@ -40,9 +58,12 @@ class HiperSpider(scrapy.Spider):
                 
         for product in data_json:
             item = HiperlibertadItem()
+            
             item['url'] = product['link']
             item['name'] = product['productName']
             item['price'] = product['items'][0]['sellers'][0]['commertialOffer']['Price']
+            item['oldprice'] = product['items'][0]['sellers'][0]['commertialOffer']['ListPrice']
+
             item['stock'] = product['items'][0]['sellers'][0]['commertialOffer']['IsAvailable']
             item['category'] = product['categories']
             item['sku'] = product['productId']
